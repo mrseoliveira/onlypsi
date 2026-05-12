@@ -1,0 +1,127 @@
+.mood-checkin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mood-checkin-eyebrow {
+  margin-bottom: 4px;
+}
+
+.mood-checkin-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.mood-checkin-time {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.mini-chart-block {
+  display: block;
+  height: 60px;
+}
+
+.dash-insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.dash-insights-eyebrow {
+  margin-bottom: 4px;
+}
+
+.dash-insights-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+}
+
+.dash-wellbeing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.dash-wellbeing-score {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.dash-wellbeing-unit {
+  color: var(--ink-4);
+  font-size: 18px;
+}
+
+.dash-wellbeing-sub {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+
+.dash-wellbeing-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.dash-goals-header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dash-goal-row {
+  /* individual goal rows */
+}
+
+.dash-goal-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-bottom: 5px;
+}
+
+.dash-goal-title {
+  color: var(--ink-2);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-goal-pct {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-row-grid {
+  grid-template-columns: auto 1fr auto auto;
+}
+
+.dash-card-mt {
+  margin-top: 20px;
+}
+
+.dash-card-mt-18 {
+  margin-top: 18px;
+}
+
+.dash-card-mt-0 {
+  margin-top: 0;
+}
+
+.dash-goals-eyebrow {
+  margin-bottom: 10px;
+}
+
+.icon-middle {
+  vertical-align: middle;
+}

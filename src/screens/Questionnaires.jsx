@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageHead } from '../components/Shell';
 import { IconClipboard, IconClock, IconArrowRight, IconExternal, IconChevronRight } from '../components/Icons';
 import { PENDING_QUESTIONNAIRES, HISTORY_QUESTIONNAIRES, PATIENT } from '../data/patient';
+import './Questionnaires.css';
 
 function TrendIcon({ dir }) {
   if (dir === "up") return <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--status-done)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 10l4-4 3 3 4-5" /><path d="M9 4h4v4" /></svg>;
@@ -56,8 +57,8 @@ function Section({ title, sub, tone, children }) {
 
 function PendingList({ items, goTo }) {
   if (!items.length) return (
-    <div style={{ padding: 60, textAlign: "center", color: "var(--ink-3)" }}>
-      <div style={{ fontFamily: "var(--font-serif)", fontSize: 24, color: "var(--ink-2)", marginBottom: 6 }}>Tudo em dia</div>
+    <div className="q-empty">
+      <div className="q-empty-title">Tudo em dia</div>
       <p>Não tens questionários para responder neste momento.</p>
     </div>
   );
@@ -67,7 +68,7 @@ function PendingList({ items, goTo }) {
   const available = items.filter(q => q.status === "available");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="pending-list">
       {overdue.length > 0 && (
         <Section title="Em atraso" sub="Responder o mais cedo possível" tone="overdue">
           <div className="qgrid">{overdue.map(q => <QCard key={q.id} q={q} onOpen={() => goTo("fill", q)} />)}</div>
@@ -90,23 +91,23 @@ function PendingList({ items, goTo }) {
 function HistoryList({ items }) {
   return (
     <div className="card flush">
-      <div className="table-head" style={{ gridTemplateColumns: "2.2fr 1fr 1fr 1fr 0.5fr" }}>
+      <div className="table-head history-table-cols">
         <span>Questionário</span><span>Tipo</span><span>Data</span><span>Resultado</span><span></span>
       </div>
       <div className="list">
         {items.map(h => (
-          <div key={h.id} className="row" style={{ gridTemplateColumns: "2.2fr 1fr 1fr 1fr 0.5fr" }}>
+          <div key={h.id} className="row history-table-cols">
             <div>
               <div className="row-title">{h.name}</div>
               <div className="row-sub">Concluído · respostas guardadas</div>
             </div>
             <span className="pill outline">{h.type}</span>
-            <span style={{ fontVariantNumeric: "tabular-nums", color: "var(--ink-2)" }}>{formatDate(h.date)}</span>
+            <span className="history-date">{formatDate(h.date)}</span>
             <span className="dotchip">
               <TrendIcon dir={h.trend} />
-              <span style={{ color: "var(--ink)", fontWeight: 500 }}>{h.score}</span>
+              <span className="history-score">{h.score}</span>
             </span>
-            <button className="btn btn-ghost" style={{ padding: "6px 10px" }}><IconExternal size={12} /></button>
+            <button className="btn btn-ghost history-btn"><IconExternal size={12} /></button>
           </div>
         ))}
       </div>

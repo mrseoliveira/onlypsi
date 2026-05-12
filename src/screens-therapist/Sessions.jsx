@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TPageHead } from '../components/TherapistShell';
 import { IconCheck, IconClock, IconAlert, IconVideo, IconLocation, IconDownload, IconPlus } from '../components/Icons';
 import { THERAPIST, WEEK_DAYS, WEEK_SESSIONS, PATIENTS } from '../data/therapist';
+import './Sessions.css';
 
 function DayTimeline({ sessions, goTo }) {
   const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
@@ -85,7 +86,7 @@ export default function TherapistSessions({ goTo }) {
       <div className="day-view">
         <header className="day-header">
           <h2 className="day-title">{currentDay?.weekday}, {currentDay?.short}</h2>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="day-header-actions">
             <button className="btn btn-ghost">Imprimir dia</button>
             <button className="btn btn-soft">Bloquear horário</button>
           </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { IconChevronLeft, IconChevronRight, IconHeart, IconAlert, IconMessage, IconCalendar, IconPlus, IconArrowRight, IconVideo, IconLocation, IconDownload, IconCheck, IconShield } from '../components/Icons';
 import { PATIENT_DETAIL } from '../data/therapist';
+import './PatientDetail.css';
 
 function RiskBadge({ risk }) {
   const labels = { baixo: "Baixo", moderado: "Moderado", elevado: "Elevado", indefinido: "Indef." };
@@ -9,7 +10,7 @@ function RiskBadge({ risk }) {
 
 function PatientChart({ data }) {
   const w = 600, h = 180, padL = 30, padR = 16, padT = 12, padB = 24;
-  if (!data || data.length < 2) return <div style={{ padding: 40, textAlign: "center", color: "var(--ink-4)" }}>Dados insuficientes</div>;
+  if (!data || data.length < 2) return <div className="pchart-insufficient">Dados insuficientes</div>;
   const max = 5, min = 0;
   const pts = data.map((v, i) => {
     const x = padL + (i / (data.length - 1)) * (w - padL - padR);
@@ -19,7 +20,7 @@ function PatientChart({ data }) {
   const linePath = pts.map((p, i) => (i === 0 ? "M" : "L") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
   const areaPath = linePath + ` L${pts[pts.length - 1][0]} ${h - padB} L${pts[0][0]} ${h - padB} Z`;
   return (
-    <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block", height: 180 }}>
+    <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="pchart-svg">
       <defs>
         <linearGradient id="pchart-grad" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.22" />
@@ -46,10 +47,10 @@ function PatientOverview({ p }) {
   return (
     <div className="patient-overview">
       <div className="po-main">
-        <section className="next-session" style={{ padding: "20px 24px" }}>
+        <section className="next-session next-session-compact">
           <div className="next-session-left">
             <div className="ns-eyebrow"><span className="spinner-dot" /> Próxima sessão</div>
-            <div className="ns-title" style={{ fontSize: 26 }}>{p.nextSession}</div>
+            <div className="ns-title ns-title-lg">{p.nextSession}</div>
             <div className="ns-meta">Sessão #{p.sessions + 1} · Foco: {p.focus}</div>
           </div>
           <div className="next-session-right">
@@ -58,10 +59,10 @@ function PatientOverview({ p }) {
         </section>
 
         <section className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
+          <div className="po-chart-header">
             <div>
-              <div className="page-eyebrow" style={{ marginBottom: 4 }}>Bem-estar geral · 7 semanas</div>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 24 }}>Evolução do humor <em style={{ color: "var(--ink-4)" }}>· {change > 0 ? "+" : ""}{change}%</em></div>
+              <div className="page-eyebrow po-chart-eyebrow">Bem-estar geral · 7 semanas</div>
+              <div className="po-chart-title">Evolução do humor <em className="po-chart-title-em">· {change > 0 ? "+" : ""}{change}%</em></div>
             </div>
             <div className="seg">
               <button className="seg-btn on">Humor</button>
@@ -73,19 +74,19 @@ function PatientOverview({ p }) {
         </section>
 
         <section className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+          <div className="po-notes-header">
             <div>
               <div className="page-eyebrow">Notas das últimas sessões</div>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 22 }}>Histórico recente</div>
+              <div className="po-notes-title">Histórico recente</div>
             </div>
             <button className="card-action">Ver todas →</button>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div className="po-notes-list">
             {(p.notes || []).slice(0, 3).map(n => (
               <article key={n.id} className="note-card">
                 <header className="note-head">
-                  <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", color: "var(--accent)", fontSize: 13 }}>{n.session}</span>
-                  <span style={{ fontSize: 11.5, color: "var(--ink-4)" }}>{n.date}</span>
+                  <span className="note-session-label">{n.session}</span>
+                  <span className="note-date-label">{n.date}</span>
                 </header>
                 <h4 className="note-title">{n.title}</h4>
                 <p className="note-excerpt">{n.excerpt}</p>
@@ -97,9 +98,9 @@ function PatientOverview({ p }) {
 
       <aside className="po-side">
         <section className="card">
-          <div className="page-eyebrow" style={{ marginBottom: 12 }}>Numa relance</div>
+          <div className="page-eyebrow po-side-eyebrow">Numa relance</div>
           <dl className="meta-list">
-            <div><dt>Pontuação atual</dt><dd style={{ fontWeight: 500 }}>{latest.toFixed(1)} <span style={{ color: "var(--ink-4)", fontSize: 11 }}>/ 5,0</span></dd></div>
+            <div><dt>Pontuação atual</dt><dd className="meta-score">{latest.toFixed(1)} <span className="meta-score-unit">/ 5,0</span></dd></div>
             <div><dt>Tendência</dt><dd><span className={"risk-badge " + (change > 0 ? "baixo" : change < 0 ? "elevado" : "moderado")}>{change > 0 ? "↑" : change < 0 ? "↓" : "→"} {Math.abs(change)}%</span></dd></div>
             <div><dt>Sessões</dt><dd>{p.sessions} concluídas</dd></div>
             <div><dt>Por responder</dt><dd>{p.pendingForms} questionários</dd></div>
@@ -108,18 +109,18 @@ function PatientOverview({ p }) {
         </section>
 
         <section className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
-            <div className="page-eyebrow">Questionários por responder</div>
+          <div className="po-forms-header">
+            <div className="page-eyebrow po-forms-eyebrow">Questionários por responder</div>
             <button className="card-action">+ Atribuir</button>
           </div>
           <div className="form-mini-list">
             {(p.questionnairesAssigned || []).filter(q => q.status !== "respondido").slice(0, 4).map(q => (
               <div key={q.id} className="form-mini">
-                <div style={{ minWidth: 0 }}>
+                <div className="form-mini-info">
                   <div className="form-mini-name">{q.name}</div>
                   <div className="form-mini-sub">{q.cadence} · {q.due}</div>
                 </div>
-                <span className={"pill " + (q.status === "em_atraso" ? "overdue" : "due")} style={{ fontSize: 10.5 }}>
+                <span className={"pill form-mini-pill " + (q.status === "em_atraso" ? "overdue" : "due")}>
                   {q.status === "em_atraso" ? "Em atraso" : "Pendente"}
                 </span>
               </div>
@@ -128,9 +129,9 @@ function PatientOverview({ p }) {
         </section>
 
         <section className="card">
-          <div className="page-eyebrow" style={{ marginBottom: 10 }}>Plano terapêutico</div>
-          <p style={{ fontSize: 13, color: "var(--ink-2)", margin: 0, lineHeight: 1.55 }}>{p.treatmentPlan}</p>
-          <button className="btn btn-ghost" style={{ width: "100%", justifyContent: "center", marginTop: 14, fontSize: 12 }}>Editar plano</button>
+          <div className="page-eyebrow po-plan-eyebrow">Plano terapêutico</div>
+          <p className="po-plan-text">{p.treatmentPlan}</p>
+          <button className="btn btn-ghost po-plan-btn">Editar plano</button>
         </section>
       </aside>
     </div>
@@ -139,28 +140,28 @@ function PatientOverview({ p }) {
 
 function PatientNotes({ p }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24, alignItems: "start" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div className="pnotes-grid">
+      <div className="pnotes-list">
         {(p.notes || []).map(n => (
           <article key={n.id} className="card">
-            <header style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-              <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", color: "var(--accent)", fontSize: 14 }}>{n.session}</span>
-              <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{n.date}</span>
+            <header className="pnote-card-header">
+              <span className="pnote-session-label">{n.session}</span>
+              <span className="pnote-date-label">{n.date}</span>
             </header>
-            <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 24, fontWeight: 400, margin: "0 0 10px", color: "var(--ink)" }}>{n.title}</h3>
-            <p style={{ color: "var(--ink-2)", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{n.excerpt}</p>
-            <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
+            <h3 className="pnote-title">{n.title}</h3>
+            <p className="pnote-excerpt">{n.excerpt}</p>
+            <div className="pnote-actions">
               <button className="btn btn-ghost">Abrir nota completa</button>
-              <button className="btn btn-ghost" style={{ padding: "8px 10px" }}><IconDownload size={12} /></button>
+              <button className="btn btn-ghost pnote-download-btn"><IconDownload size={12} /></button>
             </div>
           </article>
         ))}
       </div>
-      <aside className="card" style={{ position: "sticky", top: 76 }}>
-        <div className="page-eyebrow" style={{ marginBottom: 10 }}>Nova nota rápida</div>
+      <aside className="card pnotes-aside">
+        <div className="page-eyebrow pnotes-aside-eyebrow">Nova nota rápida</div>
         <textarea className="quick-note" placeholder="Reflexões da última sessão…" rows="6" />
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}>
-          <span style={{ fontSize: 11.5, color: "var(--ink-4)" }}>Guarda-se automaticamente</span>
+        <div className="pnotes-aside-footer">
+          <span className="pnotes-autosave">Guarda-se automaticamente</span>
           <button className="btn btn-primary">Guardar nota</button>
         </div>
       </aside>
@@ -175,19 +176,19 @@ function PatientForms({ p }) {
         <div className="card-title">Questionários atribuídos <span className="count">{(p.questionnairesAssigned || []).length}</span></div>
         <button className="btn btn-primary"><IconPlus size={14} /> Atribuir</button>
       </div>
-      <div className="table-head" style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 0.5fr" }}>
+      <div className="table-head pforms-table-cols">
         <span>Questionário</span><span>Cadência</span><span>Estado</span><span>Resultado</span><span></span>
       </div>
       <div className="list">
         {(p.questionnairesAssigned || []).map(q => (
-          <div key={q.id} className="row" style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 0.5fr" }}>
+          <div key={q.id} className="row pforms-table-cols">
             <div><div className="row-title">{q.name}</div><div className="row-sub">{q.date || q.due}</div></div>
             <span className="pill outline">{q.cadence}</span>
             <span className={"pill " + (q.status === "respondido" ? "done" : q.status === "em_atraso" ? "overdue" : "due")}>
               {q.status === "respondido" ? "Respondido" : q.status === "em_atraso" ? "Em atraso" : "Pendente"}
             </span>
-            <span style={{ fontSize: 13, color: "var(--ink-2)", fontWeight: 500 }}>{q.score || "—"}</span>
-            <button className="btn btn-ghost" style={{ padding: "6px 10px" }}><IconChevronRight size={14} /></button>
+            <span className="pform-score">{q.score || "—"}</span>
+            <button className="btn btn-ghost pform-action-btn"><IconChevronRight size={14} /></button>
           </div>
         ))}
       </div>
@@ -197,7 +198,7 @@ function PatientForms({ p }) {
 
 function PatientInfo({ p }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "start" }}>
+    <div className="pinfo-grid">
       <section className="card">
         <div className="card-section-head"><div className="page-eyebrow">Dados pessoais</div><button className="card-action">Editar</button></div>
         <dl className="meta-list">
@@ -247,8 +248,8 @@ export default function PatientDetail({ goTo, patient }) {
           <IconChevronLeft size={14} /> Pacientes
         </button>
         <div className="patient-header-main">
-          <div className="avatar" style={{ width: 80, height: 80, fontSize: 26, fontFamily: "var(--font-serif)" }}>{p.initials}</div>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="avatar patient-detail-avatar">{p.initials}</div>
+          <div className="patient-header-info">
             <h1 className="patient-name">{p.name}</h1>
             <div className="patient-meta-row">
               <span className={"status-tag " + p.status}>{STATUS_LABELS[p.status]}</span>
@@ -284,8 +285,8 @@ export default function PatientDetail({ goTo, patient }) {
         <div className="card flush">
           <div className="card-head"><div className="card-title">Sessões realizadas <span className="count">{p.sessions}</span></div></div>
           {(p.notes || []).map(n => (
-            <div key={n.id} className="row" style={{ gridTemplateColumns: "auto 1fr auto" }}>
-              <div style={{ minWidth: 80 }}><div style={{ fontFamily: "var(--font-serif)", fontSize: 15, color: "var(--ink)" }}>{n.session}</div><div style={{ fontSize: 12, color: "var(--ink-3)" }}>{n.date}</div></div>
+            <div key={n.id} className="row psess-table-cols">
+              <div className="psess-cell-info"><div className="psess-session-label">{n.session}</div><div className="psess-date-label">{n.date}</div></div>
               <div><div className="row-title">{n.title}</div><div className="row-sub">{n.excerpt}</div></div>
               <button className="btn btn-ghost">Abrir <IconChevronRight size={12} /></button>
             </div>

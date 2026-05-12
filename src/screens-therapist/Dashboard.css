@@ -1,0 +1,68 @@
+/* Therapist Dashboard screen */
+
+.tl-patient-info {
+  min-width: 0;
+}
+
+.tl-status-current {
+  background: var(--accent);
+  color: white;
+}
+
+.tl-status-dot {
+  background: white;
+}
+
+.today-eyebrow {
+  margin-bottom: 4px;
+}
+
+.today-title-em {
+  color: var(--ink-4);
+}
+
+.today-progress-count {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.alert-action-btn {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.activity-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.activity-score {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.activity-more-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.alert-icon-cell {
+  min-width: 0;
+}
+
+.week-snapshot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.week-snapshot-date {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.activity-eyebrow {
+  margin-bottom: 12px;
+}

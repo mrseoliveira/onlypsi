@@ -1,0 +1,52 @@
+/* FillQuestionnaire screen */
+
+.fill-done-eyebrow {
+  margin-bottom: 6px;
+}
+
+.fill-done-heading {
+  font-family: var(--font-serif);
+  font-size: 42px;
+  font-weight: 400;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.fill-done-heading em {
+  color: var(--accent);
+}
+
+.fill-done-sub {
+  color: var(--ink-2);
+  font-size: 16px;
+  max-width: 480px;
+  margin: 0 auto 28px;
+}
+
+.fill-done-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.fill-back-btn {
+  padding: 6px 12px;
+}
+
+.fill-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.fill-count-sep {
+  color: var(--ink-4);
+}
+
+.fill-submit-heading {
+  font-family: var(--font-serif);
+  font-size: 22px;
+}
+
+.fill-submit-sub {
+  color: var(--ink-3);
+  margin: 4px 0 0;
+}

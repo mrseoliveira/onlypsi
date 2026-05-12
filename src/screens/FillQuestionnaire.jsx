@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IconChevronLeft, IconAlert, IconCheck, IconArrowRight } from '../components/Icons';
 import { ACTIVE_QUESTIONNAIRE, PATIENT } from '../data/patient';
+import './FillQuestionnaire.css';
 
 function QItem({ item, index, options, value, onChange }) {
   return (
@@ -26,14 +27,14 @@ function SubmittedScreen({ goTo, name, answered }) {
     <div className="fill-done">
       <div className="fill-done-card">
         <div className="fill-done-icon"><IconCheck size={36} /></div>
-        <div className="page-eyebrow" style={{ marginBottom: 6 }}>Respostas guardadas</div>
-        <h1 style={{ fontFamily: "var(--font-serif)", fontSize: 42, fontWeight: 400, margin: "0 0 8px", letterSpacing: "-0.02em" }}>
-          Obrigada, <em style={{ color: "var(--accent)" }}>{PATIENT.firstName}</em>.
+        <div className="page-eyebrow fill-done-eyebrow">Respostas guardadas</div>
+        <h1 className="fill-done-heading">
+          Obrigada, <em>{PATIENT.firstName}</em>.
         </h1>
-        <p style={{ color: "var(--ink-2)", fontSize: 16, maxWidth: 480, margin: "0 auto 28px" }}>
+        <p className="fill-done-sub">
           As tuas {answered} respostas ao <strong>{name}</strong> foram enviadas para a Dra. Ana Sofia Martins.
         </p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        <div className="fill-done-actions">
           <button className="btn btn-ghost btn-lg" onClick={() => goTo("dashboard")}>Voltar ao painel</button>
           <button className="btn btn-primary btn-lg" onClick={() => goTo("questionnaires")}>
             Ver outros questionários <IconArrowRight size={14} />
@@ -79,13 +80,13 @@ export default function FillQuestionnaire({ goTo, questionnaire }) {
   return (
     <div className="fill-wrap">
       <div className="fill-progress">
-        <button className="btn btn-ghost" onClick={() => goTo("questionnaires")} style={{ padding: "6px 12px" }}>
+        <button className="btn btn-ghost fill-back-btn" onClick={() => goTo("questionnaires")}>
           <IconChevronLeft size={14} /> Sair
         </button>
         <div className="fill-progress-meta">
           <span className="fill-progress-name">{name}</span>
-          <span className="fill-progress-count" style={{ fontVariantNumeric: "tabular-nums" }}>
-            {answered} <span style={{ color: "var(--ink-4)" }}>/ {total}</span>
+          <span className="fill-progress-count fill-count">
+            {answered} <span className="fill-count-sep">/ {total}</span>
           </span>
         </div>
         <div className="fill-progress-bar">
@@ -128,10 +129,10 @@ export default function FillQuestionnaire({ goTo, questionnaire }) {
 
         <div className="fill-submit">
           <div>
-            <div style={{ fontFamily: "var(--font-serif)", fontSize: 22 }}>
+            <div className="fill-submit-heading">
               {answered === total ? "Tudo respondido ✓" : `Faltam ${total - answered} perguntas`}
             </div>
-            <p style={{ color: "var(--ink-3)", margin: "4px 0 0" }}>As tuas respostas são enviadas à tua terapeuta antes da sessão.</p>
+            <p className="fill-submit-sub">As tuas respostas são enviadas à tua terapeuta antes da sessão.</p>
           </div>
           <button className="btn btn-primary btn-lg" disabled={answered < total} onClick={() => setSubmitted(true)}>
             Submeter respostas <IconCheck size={14} />

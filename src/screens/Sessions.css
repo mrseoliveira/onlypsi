@@ -1,0 +1,93 @@
+/* Sessions screen */
+
+.sess-mode-label {
+  font-size: 12.5px;
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.sess-focus-label {
+  color: var(--ink-4);
+}
+
+.sess-focus-value {
+  color: var(--ink-2);
+}
+
+.sess-therapist-eyebrow {
+  margin-bottom: 8px;
+}
+
+.sess-therapist-info {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.sess-therapist-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+.sess-therapist-name {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.sess-therapist-role {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.sess-message-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.sess-checklist-eyebrow {
+  margin-bottom: 10px;
+}
+
+.sess-checklist-overdue {
+  color: var(--status-overdue);
+}
+
+.sess-check-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.sess-past-table-cols {
+  grid-template-columns: 100px 1.6fr 1fr 0.6fr 0.6fr 0.4fr;
+}
+
+.sess-past-date {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.sess-past-focus {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.sess-past-none {
+  color: var(--ink-4);
+  font-size: 12px;
+}
+
+.sess-past-action-btn {
+  padding: 6px 10px;
+}
+
+.sess-checklist-card {
+  margin-top: 16px;
+}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageHead } from '../components/Shell';
 import { IconCheck, IconChevronRight } from '../components/Icons';
 import { PROGRESS_MOOD, PROGRESS_ANXIETY, GOALS, INSIGHTS } from '../data/patient';
+import './Progress.css';
 
 function StatCard({ eyebrow, value, unit, delta, deltaTone, sub, tone }) {
   return (
@@ -9,7 +10,7 @@ function StatCard({ eyebrow, value, unit, delta, deltaTone, sub, tone }) {
       <div className="page-eyebrow">{eyebrow}</div>
       <div className="stat-row">
         <div className="stat-value">{value}<span className="stat-unit">{unit}</span></div>
-        <span className={"pill " + deltaTone} style={{ fontSize: 11 }}>{delta}</span>
+        <span className={"pill stat-pill-size " + deltaTone}>{delta}</span>
       </div>
       <div className="stat-sub">{sub}</div>
     </div>
@@ -41,8 +42,8 @@ function BigChart({ data, trendUp }) {
   const accent = trendUp ? "var(--accent)" : "var(--status-due)";
 
   return (
-    <div style={{ width: "100%" }}>
-      <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block", height: 240 }}>
+    <div className="big-chart-wrap">
+      <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="big-chart-svg">
         <defs>
           <linearGradient id="bigchart-grad" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor={accent} stopOpacity="0.22" />
@@ -75,7 +76,7 @@ function BigChart({ data, trendUp }) {
           </text>
         </g>
       </svg>
-      <div style={{ display: "flex", gap: 18, marginTop: 12, fontSize: 11.5, color: "var(--ink-3)" }}>
+      <div className="big-chart-legend">
         <span className="dotchip"><span className="d info" /> Pontuação semanal</span>
         <span className="dotchip"><span className="d" style={{ background: accent }} /> Tendência (4 semanas)</span>
       </div>
@@ -103,11 +104,11 @@ export default function Progress({ goTo }) {
       </div>
       <div className="progress-grid">
         <section className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
+          <div className="big-chart-header">
             <div>
-              <div className="page-eyebrow" style={{ marginBottom: 4 }}>Tendência semanal</div>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 24 }}>
-                {metric === "mood" ? "Bem-estar geral" : "Ansiedade"} <em style={{ color: "var(--ink-4)" }}>· 12 semanas</em>
+              <div className="page-eyebrow big-chart-eyebrow">Tendência semanal</div>
+              <div className="big-chart-title">
+                {metric === "mood" ? "Bem-estar geral" : "Ansiedade"} <em className="big-chart-title-em">· 12 semanas</em>
               </div>
             </div>
             <div className="seg">
@@ -118,37 +119,38 @@ export default function Progress({ goTo }) {
           <BigChart data={data} trendUp={trendUp} />
         </section>
         <section className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+          <div className="progress-goals-header">
             <div>
               <div className="page-eyebrow">Objetivos terapêuticos</div>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 22 }}>O que estamos a trabalhar</div>
+              <div className="progress-goals-title">O que estamos a trabalhar</div>
             </div>
           </div>
           <div className="goals-list">
             {GOALS.map(g => (
               <article key={g.id} className="goal">
                 <header className="goal-head">
-                  <span className="pill outline" style={{ fontSize: 10.5 }}>{g.status}</span>
-                  <span style={{ fontSize: 12, color: "var(--ink-3)" }}>desde {g.started}</span>
+                  <span className="pill outline goal-status-size">{g.status}</span>
+                  <span className="goal-date">desde {g.started}</span>
                 </header>
                 <h4 className="goal-title">{g.title}</h4>
                 <div className="goal-bar-wrap">
                   <div className="bar"><div className="bar-fill" style={{ width: (g.progress * 100) + "%" }} /></div>
-                  <span className="goal-pct" style={{ fontVariantNumeric: "tabular-nums" }}>{Math.round(g.progress * 100)}%</span>
+                  <span className="goal-pct">{Math.round(g.progress * 100)}%</span>
                 </div>
               </article>
             ))}
           </div>
         </section>
       </div>
-      <section className="card" style={{ marginTop: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+      <section className="card progress-insights-section">
+        <div className="progress-insights-header">
           <div>
             <div className="page-eyebrow">O que a tua terapeuta tem notado</div>
-            <div style={{ fontFamily: "var(--font-serif)", fontSize: 22 }}>Insights recentes</div>
+            <div className="progress-insights-title">Insights recentes</div>
           </div>
           <button className="card-action">Ver todos <IconChevronRight size={12} /></button>
         </div>
+
         <div className="insight-list">
           {INSIGHTS.map(ins => (
             <article key={ins.id} className="insight">

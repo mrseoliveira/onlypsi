@@ -1,6 +1,7 @@
 import { TPageHead } from '../components/TherapistShell';
 import { IconCheck, IconClock, IconAlert, IconArrowRight, IconVideo, IconLocation, IconDownload, IconPlus } from '../components/Icons';
 import { THERAPIST, TODAYS_SESSIONS, PATIENTS, ALERTS, ACTIVITY } from '../data/therapist';
+import './Dashboard.css';
 
 function TimelineSlot({ s, goTo }) {
   return (
@@ -19,7 +20,7 @@ function TimelineSlot({ s, goTo }) {
       <div className="tl-card">
         <header className="tl-head">
           <div className="avatar avatar-sm">{s.initials}</div>
-          <div style={{ minWidth: 0 }}>
+          <div className="tl-patient-info">
             <div className="tl-patient">{s.patient}</div>
             <div className="tl-topic">
               {s.topic} · {s.mode === "Vídeo" ? <><IconVideo size={11} /> Vídeo</> : <><IconLocation size={11} /> Presencial</>}
@@ -27,7 +28,7 @@ function TimelineSlot({ s, goTo }) {
           </div>
           <div className="tl-status">
             {s.status === "completed" && <span className="pill done"><IconCheck size={10} /> Concluída</span>}
-            {s.status === "current" && <span className="pill" style={{ background: "var(--accent)", color: "white" }}><span className="spinner-dot" style={{ background: "white" }} /> A decorrer</span>}
+            {s.status === "current" && <span className="pill tl-status-current"><span className="spinner-dot tl-status-dot" /> A decorrer</span>}
             {s.status === "upcoming" && <span className="pill outline"><IconClock size={10} /> Próxima</span>}
           </div>
         </header>
@@ -47,14 +48,14 @@ function TodaySchedule({ goTo }) {
     <section className="today-schedule">
       <header className="today-head">
         <div>
-          <div className="page-eyebrow" style={{ marginBottom: 4 }}>Agenda de hoje · 9h00 – 17h00</div>
-          <h2 className="today-title">6 consultas marcadas <em style={{ color: "var(--ink-4)" }}>· {THERAPIST.completedToday} concluídas</em></h2>
+          <div className="page-eyebrow today-eyebrow">Agenda de hoje · 9h00 – 17h00</div>
+          <h2 className="today-title">6 consultas marcadas <em className="today-title-em">· {THERAPIST.completedToday} concluídas</em></h2>
         </div>
         <div className="today-progress">
           <div className="today-progress-bar">
             <div className="today-progress-fill" style={{ width: ((THERAPIST.completedToday / THERAPIST.todayTotal) * 100) + "%" }} />
           </div>
-          <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>{THERAPIST.completedToday}/{THERAPIST.todayTotal}</span>
+          <span className="today-progress-count">{THERAPIST.completedToday}/{THERAPIST.todayTotal}</span>
         </div>
       </header>
       <div className="timeline">
@@ -78,12 +79,12 @@ function AlertsCard({ goTo }) {
             <article key={a.id} className={"alert-row " + a.level} onClick={() => goTo("patient", patient)}>
               <div className={"alert-bar " + a.level} />
               <div className={"alert-icon " + a.level}><IconAlert size={14} /></div>
-              <div style={{ minWidth: 0 }}>
+              <div className="alert-icon-cell">
                 <div className="alert-title">{a.title}</div>
                 <div className="alert-detail">{a.detail}</div>
                 <div className="alert-time">{a.timeAgo}</div>
               </div>
-              <button className="btn btn-ghost" style={{ alignSelf: "center", whiteSpace: "nowrap" }} onClick={(e) => { e.stopPropagation(); goTo("patient", patient); }}>
+              <button className="btn btn-ghost alert-action-btn" onClick={(e) => { e.stopPropagation(); goTo("patient", patient); }}>
                 {a.action} <IconArrowRight size={12} />
               </button>
             </article>
@@ -97,25 +98,25 @@ function AlertsCard({ goTo }) {
 function ActivityFeed() {
   return (
     <section className="card">
-      <div className="page-eyebrow" style={{ marginBottom: 12 }}>Atividade recente</div>
+      <div className="page-eyebrow activity-eyebrow">Atividade recente</div>
       <div className="activity">
         {ACTIVITY.map(a => (
           <article key={a.id} className={"activity-row " + (a.urgent ? "urgent" : "")}>
             <div className="avatar avatar-sm">{a.initials}</div>
-            <div style={{ minWidth: 0, flex: 1 }}>
+            <div className="activity-info">
               <div className="activity-text">
                 <strong>{a.patient.split(" ")[0]} {a.patient.split(" ")[1]}</strong>{" "}
                 <span dangerouslySetInnerHTML={{ __html: a.text }} />
               </div>
               <div className="activity-meta">
                 <span>{a.time}</span>
-                {a.score && <><span>·</span><span style={{ color: "var(--ink-2)", fontWeight: 500 }}>{a.score}</span></>}
+                {a.score && <><span>·</span><span className="activity-score">{a.score}</span></>}
               </div>
             </div>
           </article>
         ))}
       </div>
-      <button className="btn btn-ghost" style={{ width: "100%", justifyContent: "center", marginTop: 12 }}>
+      <button className="btn btn-ghost activity-more-btn">
         Ver toda a atividade <IconArrowRight size={12} />
       </button>
     </section>
@@ -131,9 +132,9 @@ function WeekSnapshot() {
   ];
   return (
     <section className="card">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+      <div className="week-snapshot-header">
         <div className="page-eyebrow">Esta semana</div>
-        <span style={{ fontSize: 12, color: "var(--ink-3)" }}>12 – 16 Mai</span>
+        <span className="week-snapshot-date">12 – 16 Mai</span>
       </div>
       <div className="week-stats">
         {stats.map((s, i) => (

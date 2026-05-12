@@ -1,0 +1,74 @@
+/* Therapist Patients screen */
+
+.patient-empty {
+  padding: 60px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.patient-empty-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--ink-2);
+  margin-bottom: 6px;
+}
+
+.patient-table-cols {
+  grid-template-columns: 2fr 1.4fr 1.2fr 0.8fr 1fr 0.4fr;
+}
+
+.patient-cell-info {
+  min-width: 0;
+}
+
+.patient-focus {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.patient-next-session {
+  font-size: 13px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.patient-next-session-today {
+  color: var(--accent);
+}
+
+.patient-spark-wrap {
+  width: 100%;
+}
+
+.patient-no-spark {
+  color: var(--ink-4);
+  font-size: 12px;
+}
+
+.patient-action-btn {
+  padding: 6px 10px;
+}
+
+.patient-card-avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.patient-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.patient-trend-weeks {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.filter-chips-toolbar {
+  padding-bottom: 0;
+}
+
+.spark-svg {
+  display: block;
+}

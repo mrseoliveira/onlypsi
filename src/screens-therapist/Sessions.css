@@ -1,0 +1,6 @@
+/* Therapist Sessions screen */
+
+.day-header-actions {
+  display: flex;
+  gap: 8px;
+}

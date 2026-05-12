@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageHead } from '../components/Shell';
 import { IconClock, IconCheck, IconDownload, IconPlus, IconMessage, IconVideo, IconLocation, IconChevronRight, IconBookmark, IconArrowRight } from '../components/Icons';
 import { PATIENT, SESSIONS_UPCOMING, SESSIONS_PAST, PENDING_QUESTIONNAIRES } from '../data/patient';
+import './Sessions.css';
 
 function formatDate(iso) {
   const d = new Date(iso + "T00:00:00");
@@ -26,7 +27,7 @@ function SessionCard({ s, highlighted, goTo }) {
         <div className="sess-meta">
           <span className="sess-time"><IconClock size={12} /> {s.time} · {s.duration}min</span>
           <span className="dotchip"><span className={"d " + (s.mode === "Vídeo" ? "info" : "done")} /></span>
-          <span style={{ fontSize: 12.5, color: "var(--ink-2)", display: "inline-flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+          <span className="sess-mode-label">
             {s.mode === "Vídeo" ? <><IconVideo size={12} /> Videoconferência</> : <><IconLocation size={12} /> Presencial</>}
           </span>
           {s.status === "confirmed"
@@ -35,8 +36,8 @@ function SessionCard({ s, highlighted, goTo }) {
         </div>
         <h3 className="sess-title">{s.topic}</h3>
         <p className="sess-focus">
-          <span style={{ color: "var(--ink-4)" }}>Foco: </span>
-          <span style={{ color: "var(--ink-2)" }}>{s.focus}</span>
+          <span className="sess-focus-label">Foco: </span>
+          <span className="sess-focus-value">{s.focus}</span>
         </p>
       </div>
       <div className="sess-actions">
@@ -63,12 +64,12 @@ function UpcomingSessions({ goTo }) {
       </div>
       <aside className="sess-side">
         <div className="card">
-          <div className="page-eyebrow" style={{ marginBottom: 8 }}>A tua terapeuta</div>
-          <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 14 }}>
-            <div className="avatar" style={{ width: 56, height: 56, fontSize: 18 }}>{PATIENT.therapist.initials}</div>
+          <div className="page-eyebrow sess-therapist-eyebrow">A tua terapeuta</div>
+          <div className="sess-therapist-info">
+            <div className="avatar sess-therapist-avatar">{PATIENT.therapist.initials}</div>
             <div>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 20, lineHeight: 1.1 }}>{PATIENT.therapist.name}</div>
-              <div style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{PATIENT.therapist.role}</div>
+              <div className="sess-therapist-name">{PATIENT.therapist.name}</div>
+              <div className="sess-therapist-role">{PATIENT.therapist.role}</div>
             </div>
           </div>
           <hr className="hair" />
@@ -78,12 +79,12 @@ function UpcomingSessions({ goTo }) {
             <div><dt>Abordagem</dt><dd>Cognitivo-comportamental</dd></div>
             <div><dt>Sessões realizadas</dt><dd>13</dd></div>
           </dl>
-          <button className="btn btn-soft" style={{ width: "100%", justifyContent: "center", marginTop: 14 }}>
+          <button className="btn btn-soft sess-message-btn">
             <IconMessage size={14} /> Enviar mensagem
           </button>
         </div>
-        <div className="card" style={{ marginTop: 16 }}>
-          <div className="page-eyebrow" style={{ marginBottom: 10 }}>Antes da próxima sessão</div>
+        <div className="card sess-checklist-card">
+          <div className="page-eyebrow sess-checklist-eyebrow">Antes da próxima sessão</div>
           <ul className="checklist">
             <li className="done">
               <span className="check"><IconCheck size={12} /></span>
@@ -92,12 +93,12 @@ function UpcomingSessions({ goTo }) {
             <li>
               <span className="check todo" />
               <div><div className="check-title">Perfil de Humor Pré-Sessão</div><div className="check-sub">Para hoje · 12 perguntas</div></div>
-              <button className="btn btn-ghost" style={{ padding: "4px 10px", fontSize: 12 }} onClick={() => goTo("fill", PENDING_QUESTIONNAIRES[0])}>Responder</button>
+              <button className="btn btn-ghost sess-check-btn" onClick={() => goTo("fill", PENDING_QUESTIONNAIRES[0])}>Responder</button>
             </li>
             <li>
               <span className="check todo" />
-              <div><div className="check-title">Inventário de Desafios Recentes</div><div className="check-sub" style={{ color: "var(--status-overdue)" }}>Em atraso · 2 dias</div></div>
-              <button className="btn btn-ghost" style={{ padding: "4px 10px", fontSize: 12 }} onClick={() => goTo("fill", PENDING_QUESTIONNAIRES[1])}>Responder</button>
+              <div><div className="check-title">Inventário de Desafios Recentes</div><div className="check-sub sess-checklist-overdue">Em atraso · 2 dias</div></div>
+              <button className="btn btn-ghost sess-check-btn" onClick={() => goTo("fill", PENDING_QUESTIONNAIRES[1])}>Responder</button>
             </li>
           </ul>
         </div>
@@ -109,25 +110,25 @@ function UpcomingSessions({ goTo }) {
 function PastSessions() {
   return (
     <div className="card flush">
-      <div className="table-head" style={{ gridTemplateColumns: "100px 1.6fr 1fr 0.6fr 0.6fr 0.4fr" }}>
+      <div className="table-head sess-past-table-cols">
         <span>Data</span><span>Sessão</span><span>Foco</span><span>Notas</span><span>Material</span><span></span>
       </div>
       <div className="list">
         {SESSIONS_PAST.map(p => (
-          <div key={p.id} className="row" style={{ gridTemplateColumns: "100px 1.6fr 1fr 0.6fr 0.6fr 0.4fr" }}>
-            <div style={{ fontVariantNumeric: "tabular-nums", color: "var(--ink-2)", fontSize: 13 }}>{formatDate(p.date)}</div>
+          <div key={p.id} className="row sess-past-table-cols">
+            <div className="sess-past-date">{formatDate(p.date)}</div>
             <div>
               <div className="row-title">{p.topic}</div>
               <div className="row-sub">{p.mode === "Vídeo" ? "Videoconferência" : "Presencial"} · {p.duration} min · {p.time}</div>
             </div>
-            <div style={{ fontSize: 13, color: "var(--ink-2)" }}>{p.focus}</div>
+            <div className="sess-past-focus">{p.focus}</div>
             <div>
-              {p.notes > 0 ? <span className="dotchip"><span className="d info" /> {p.notes} notas</span> : <span style={{ color: "var(--ink-4)", fontSize: 12 }}>—</span>}
+              {p.notes > 0 ? <span className="dotchip"><span className="d info" /> {p.notes} notas</span> : <span className="sess-past-none">—</span>}
             </div>
             <div>
-              {p.materials > 0 ? <span className="dotchip"><IconBookmark size={12} /> {p.materials}</span> : <span style={{ color: "var(--ink-4)", fontSize: 12 }}>—</span>}
+              {p.materials > 0 ? <span className="dotchip"><IconBookmark size={12} /> {p.materials}</span> : <span className="sess-past-none">—</span>}
             </div>
-            <button className="btn btn-ghost" style={{ padding: "6px 10px" }}><IconChevronRight size={14} /></button>
+            <button className="btn btn-ghost sess-past-action-btn"><IconChevronRight size={14} /></button>
           </div>
         ))}
       </div>

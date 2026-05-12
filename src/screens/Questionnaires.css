@@ -1,0 +1,38 @@
+/* Questionnaires screen */
+
+.q-empty {
+  padding: 60px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.q-empty-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--ink-2);
+  margin-bottom: 6px;
+}
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.history-date {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+
+.history-btn {
+  padding: 6px 10px;
+}
+
+.history-table-cols {
+  grid-template-columns: 2.2fr 1fr 1fr 1fr 0.5fr;
+}
+
+.history-score {
+  color: var(--ink);
+  font-weight: 500;
+}

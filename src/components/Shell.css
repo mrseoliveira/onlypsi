@@ -1,0 +1,43 @@
+/* Shell components */
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 6px;
+  border-left: 1px solid var(--line);
+}
+
+.topbar-user-info {
+  line-height: 1.2;
+  margin-right: 4px;
+}
+
+.topbar-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.topbar-user-role {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.page-head-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.page-head-content {
+  min-width: 0;
+  flex: 1 1 320px;
+}
+
+.page-head-actions {
+  display: flex;
+  gap: 10px;
+}

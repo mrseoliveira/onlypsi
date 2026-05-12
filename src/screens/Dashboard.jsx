@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageHead } from '../components/Shell';
 import { IconClipboard, IconArrowRight, IconCheck, IconChevronRight } from '../components/Icons';
 import { PATIENT, PENDING_QUESTIONNAIRES, PROGRESS_MOOD, GOALS, INSIGHTS } from '../data/patient';
+import './Dashboard.css';
 
 function NextSessionCard({ session, onView }) {
   return (
@@ -40,7 +41,7 @@ function NextSessionCard({ session, onView }) {
 function PendingQuestionnaireRow({ q, onOpen }) {
   const statusLabel = q.status === "overdue" ? "Em atraso" : q.status === "due" ? "Hoje" : "Disponível";
   return (
-    <div className="row pq-row" onClick={onOpen} style={{ gridTemplateColumns: "auto 1fr auto auto" }}>
+    <div className="row pq-row pq-row-grid" onClick={onOpen}>
       <div className={"pq-marker " + q.status} aria-hidden>
         <IconClipboard size={16} />
       </div>
@@ -81,12 +82,12 @@ function MoodCheckIn() {
   ];
   return (
     <div className="card">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+      <div className="mood-checkin-header">
         <div>
-          <div className="page-eyebrow" style={{ marginBottom: 4 }}>Check-in rápido</div>
-          <div style={{ fontFamily: "var(--font-serif)", fontSize: 22, lineHeight: 1.15 }}>Como te sentes <em>agora</em>?</div>
+          <div className="page-eyebrow mood-checkin-eyebrow">Check-in rápido</div>
+          <div className="mood-checkin-title">Como te sentes <em>agora</em>?</div>
         </div>
-        <div style={{ fontSize: 12, color: "var(--ink-3)" }}>Demora 5s</div>
+        <div className="mood-checkin-time">Demora 5s</div>
       </div>
       <div className="mood-row">
         {moods.map(m => (
@@ -115,7 +116,7 @@ function ProgressMiniChart({ data, color }) {
   const path = points.map((p, i) => (i === 0 ? "M" : "L") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
   const areaPath = path + ` L${points[points.length - 1][0]} ${h} L${points[0][0]} ${h} Z`;
   return (
-    <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block", height: 60 }}>
+    <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="mini-chart-block">
       <defs>
         <linearGradient id={"g-" + color.replace(/[^a-z]/gi, "")} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.18" />
@@ -144,13 +145,13 @@ export default function Dashboard({ goTo }) {
       <NextSessionCard session={PATIENT.nextSession} onView={() => goTo("sessions")} />
       <div className="dash-grid">
         <div className="dash-main">
-          <section className="card flush" style={{ marginTop: 0 }}>
+          <section className="card flush dash-card-mt-0">
             <div className="card-head">
               <div className="card-title">
                 A responder antes da sessão <span className="count">{pending.length}</span>
               </div>
               <button className="card-action" onClick={() => goTo("questionnaires")}>
-                Ver todos os questionários <IconChevronRight size={12} style={{ verticalAlign: "middle" }} />
+                Ver todos os questionários <IconChevronRight size={12} className="icon-middle" />
               </button>
             </div>
             <div className="list">
@@ -159,11 +160,11 @@ export default function Dashboard({ goTo }) {
               ))}
             </div>
           </section>
-          <section className="card" style={{ marginTop: 20 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+          <section className="card dash-card-mt">
+            <div className="dash-insights-header">
               <div>
-                <div className="page-eyebrow" style={{ marginBottom: 4 }}>Notas da tua terapeuta</div>
-                <div style={{ fontFamily: "var(--font-serif)", fontSize: 22 }}>Insights recentes</div>
+                <div className="page-eyebrow dash-insights-eyebrow">Notas da tua terapeuta</div>
+                <div className="dash-insights-title">Insights recentes</div>
               </div>
               <button className="card-action" onClick={() => goTo("progress")}>Ver progresso</button>
             </div>
@@ -182,28 +183,28 @@ export default function Dashboard({ goTo }) {
         </div>
         <aside className="dash-side">
           <MoodCheckIn />
-          <section className="card" style={{ marginTop: 18 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
+          <section className="card dash-card-mt-18">
+            <div className="dash-wellbeing-header">
               <div className="page-eyebrow">Bem-estar geral</div>
               <span className="pill done"><IconCheck size={10} /> +43% em 12 semanas</span>
             </div>
-            <div style={{ fontFamily: "var(--font-serif)", fontSize: 32, lineHeight: 1.1, marginTop: 4 }}>
-              3,7<span style={{ color: "var(--ink-4)", fontSize: 18 }}> / 5,0</span>
+            <div className="dash-wellbeing-score">
+              3,7<span className="dash-wellbeing-unit"> / 5,0</span>
             </div>
-            <div style={{ fontSize: 12.5, color: "var(--ink-3)", marginBottom: 14 }}>Média móvel de 4 semanas</div>
+            <div className="dash-wellbeing-sub">Média móvel de 4 semanas</div>
             <ProgressMiniChart data={PROGRESS_MOOD} color="var(--accent)" />
-            <button className="btn btn-ghost" style={{ width: "100%", justifyContent: "center", marginTop: 14 }} onClick={() => goTo("progress")}>
+            <button className="btn btn-ghost dash-wellbeing-btn" onClick={() => goTo("progress")}>
               Ver progresso completo <IconArrowRight size={12} />
             </button>
           </section>
-          <section className="card" style={{ marginTop: 18 }}>
-            <div className="page-eyebrow" style={{ marginBottom: 10 }}>Objetivos terapêuticos</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <section className="card dash-card-mt-18">
+            <div className="page-eyebrow dash-goals-eyebrow">Objetivos terapêuticos</div>
+            <div className="dash-goals-header">
               {GOALS.slice(0, 3).map(g => (
-                <div key={g.id}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 5 }}>
-                    <span style={{ color: "var(--ink-2)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.title}</span>
-                    <span style={{ color: "var(--ink-3)", fontVariantNumeric: "tabular-nums" }}>{Math.round(g.progress * 100)}%</span>
+                <div key={g.id} className="dash-goal-row">
+                  <div className="dash-goal-labels">
+                    <span className="dash-goal-title">{g.title}</span>
+                    <span className="dash-goal-pct">{Math.round(g.progress * 100)}%</span>
                   </div>
                   <div className="bar"><div className="bar-fill" style={{ width: (g.progress * 100) + "%" }} /></div>
                 </div>
