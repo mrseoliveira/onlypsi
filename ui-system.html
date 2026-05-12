@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OnlyPsi — UI System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/styles.css" />
+  <style>
+    .ds-wrap { max-width: 900px; margin: 0 auto; padding: 56px 40px 120px; }
+    .ds-section { margin-bottom: 72px; }
+    .ds-section-title { font-family: var(--font-serif); font-size: 32px; font-weight: 400; color: var(--ink); margin: 0 0 4px; letter-spacing: -0.02em; }
+    .ds-section-sub { font-size: 13px; color: var(--ink-3); margin: 0 0 32px; }
+    .ds-divider { border: none; border-top: 1px solid var(--line); margin: 72px 0; }
+    .ds-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-4); margin-bottom: 12px; }
+    .ds-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .ds-col { display: flex; flex-direction: column; gap: 10px; }
+    .ds-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ds-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .ds-spec { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); margin-top: 4px; }
+    .ds-swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .ds-swatch { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); }
+    .ds-swatch-color { height: 64px; }
+    .ds-swatch-info { padding: 8px 10px; background: var(--surface); }
+    .ds-swatch-name { font-size: 12px; font-weight: 500; color: var(--ink-2); }
+    .ds-swatch-val { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); }
+    .ds-type-sample { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line-soft); }
+    .ds-type-sample:last-child { border-bottom: none; margin-bottom: 0; }
+    .ds-token-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ds-token-table th { text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+    .ds-token-table td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+    .ds-token-table tr:last-child td { border-bottom: none; }
+    .ds-preview-box { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 28px; margin-bottom: 16px; }
+    .ds-nav { position: fixed; top: 0; left: 0; bottom: 0; width: 200px; background: var(--surface); border-right: 1px solid var(--line); padding: 32px 0; overflow-y: auto; z-index: 100; }
+    .ds-nav-brand { font-family: var(--font-serif); font-size: 20px; padding: 0 20px 24px; color: var(--ink); }
+    .ds-nav-brand em { color: var(--accent); }
+    .ds-nav a { display: block; padding: 7px 20px; font-size: 13px; color: var(--ink-3); text-decoration: none; border-left: 2px solid transparent; }
+    .ds-nav a:hover { color: var(--ink); }
+    .ds-nav a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+    .ds-nav-group { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-4); padding: 16px 20px 6px; }
+    body { padding-left: 200px; }
+    @media (max-width: 700px) { .ds-nav { display: none; } body { padding-left: 0; } }
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+    .icon-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); font-size: 10.5px; color: var(--ink-3); text-align: center; }
+    .palette-strip { display: flex; gap: 0; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); margin-bottom: 10px; height: 48px; }
+    .palette-name { font-size: 12px; font-weight: 500; color: var(--ink-2); margin-bottom: 2px; }
+  </style>
+</head>
+<body>
+
+<nav class="ds-nav">
+  <div class="ds-nav-brand">Only<em>Psi</em></div>
+  <div class="ds-nav-group">Fundação</div>
+  <a href="#cores">Cores</a>
+  <a href="#tipografia">Tipografia</a>
+  <a href="#espacamento">Espaçamento</a>
+  <a href="#sombras">Sombras & raios</a>
+  <div class="ds-nav-group">Componentes</div>
+  <a href="#botoes">Botões</a>
+  <a href="#pills">Pills & badges</a>
+  <a href="#cards">Cards</a>
+  <a href="#formularios">Formulários</a>
+  <a href="#navegacao">Navegação</a>
+  <a href="#tabelas">Tabelas & listas</a>
+  <div class="ds-nav-group">Padrões</div>
+  <a href="#icones">Ícones</a>
+  <a href="#paletas">Paletas</a>
+</nav>
+
+<div class="ds-wrap">
+
+  <div style="margin-bottom: 56px;">
+    <div class="page-eyebrow">Versão 1.0 · Maio 2026</div>
+    <h1 style="font-family: var(--font-serif); font-size: 52px; font-weight: 400; margin: 8px 0 12px; letter-spacing: -0.03em;">Only<em style="color:var(--accent)">Psi</em> UI System</h1>
+    <p style="font-size: 16px; color: var(--ink-3); max-width: 520px; line-height: 1.6; margin: 0;">Sistema de design para a plataforma de psicologia clínica. Cobre tokens, componentes e padrões de interação para as áreas do paciente e do terapeuta.</p>
+  </div>
+
+  <hr class="ds-divider" style="margin-top: 0;">
+
+  <!-- CORES -->
+  <section class="ds-section" id="cores">
+    <h2 class="ds-section-title">Cores</h2>
+    <p class="ds-section-sub">Paleta base Sereno. As cores de accent são overridáveis via CSS custom properties.</p>
+
+    <div class="ds-label">Superfícies</div>
+    <div class="ds-swatch-grid" style="margin-bottom: 28px;">
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#F4F6FA;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Background</div><div class="ds-swatch-val">--bg · #F4F6FA</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#FFFFFF;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Surface</div><div class="ds-swatch-val">--surface · #FFFFFF</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#FAFBFD;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Surface 2</div><div class="ds-swatch-val">--surface-2 · #FAFBFD</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#EDF1F7;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Surface sunk</div><div class="ds-swatch-val">--surface-sunk · #EDF1F7</div></div></div>
+    </div>
+
+    <div class="ds-label">Texto (escala de ink)</div>
+    <div class="ds-swatch-grid" style="margin-bottom: 28px;">
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#0E1A2B"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Ink</div><div class="ds-swatch-val">--ink · #0E1A2B</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#3B4A60"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Ink 2</div><div class="ds-swatch-val">--ink-2 · #3B4A60</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#66758C"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Ink 3</div><div class="ds-swatch-val">--ink-3 · #66758C</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#94A1B5"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Ink 4</div><div class="ds-swatch-val">--ink-4 · #94A1B5</div></div></div>
+    </div>
+
+    <div class="ds-label">Accent (Sereno — padrão)</div>
+    <div class="ds-swatch-grid" style="margin-bottom: 28px;">
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#1F5D8C"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Accent</div><div class="ds-swatch-val">--accent · #1F5D8C</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#163F60"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Accent deep</div><div class="ds-swatch-val">--accent-deep</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#E5EFF7;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Accent soft</div><div class="ds-swatch-val">--accent-soft</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#F2F7FB;border-bottom:1px solid var(--line)"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Accent softer</div><div class="ds-swatch-val">--accent-softer</div></div></div>
+    </div>
+
+    <div class="ds-label">Estado</div>
+    <div class="ds-swatch-grid" style="margin-bottom: 28px;">
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#4F8470"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Done</div><div class="ds-swatch-val">--status-done</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#C45151"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Overdue</div><div class="ds-swatch-val">--status-overdue</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#C4884E"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Due</div><div class="ds-swatch-val">--status-due</div></div></div>
+    </div>
+
+    <div class="ds-label">Escala de humor</div>
+    <div class="ds-swatch-grid">
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#B9543F"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Muito baixo</div><div class="ds-swatch-val">--mood-1</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#D08856"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Baixo</div><div class="ds-swatch-val">--mood-2</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#D4B461"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Neutro</div><div class="ds-swatch-val">--mood-3</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#8FAA73"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Bom</div><div class="ds-swatch-val">--mood-4</div></div></div>
+      <div class="ds-swatch"><div class="ds-swatch-color" style="background:#4F8470"></div><div class="ds-swatch-info"><div class="ds-swatch-name">Ótimo</div><div class="ds-swatch-val">--mood-5</div></div></div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- TIPOGRAFIA -->
+  <section class="ds-section" id="tipografia">
+    <h2 class="ds-section-title">Tipografia</h2>
+    <p class="ds-section-sub">Duas famílias: Instrument Serif para títulos e momentos de calma; Geist para interface.</p>
+
+    <div class="ds-type-sample">
+      <div style="font-family: var(--font-serif); font-size: 48px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink);">O meu <em style="color:var(--accent)">progresso</em></div>
+      <div class="ds-spec">Instrument Serif · 48px · letter-spacing -0.02em · Page title</div>
+    </div>
+    <div class="ds-type-sample">
+      <div style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; letter-spacing: -0.015em; color: var(--ink);">Insights recentes</div>
+      <div class="ds-spec">Instrument Serif · 32px · Section heading</div>
+    </div>
+    <div class="ds-type-sample">
+      <div style="font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--ink);">Como te sentes <em>agora</em>?</div>
+      <div class="ds-spec">Instrument Serif · 22px · Card heading</div>
+    </div>
+    <div class="ds-type-sample">
+      <div style="font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--ink);">Texto de interface — Geist Medium</div>
+      <div style="font-family: var(--font-sans); font-size: 14px; color: var(--ink-2);">Texto secundário — Geist Regular</div>
+      <div style="font-family: var(--font-sans); font-size: 13px; color: var(--ink-3);">Meta-informação — Geist · 13px</div>
+      <div style="font-family: var(--font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-4); margin-top: 4px;">EYEBROW LABEL — 11px CAPS</div>
+      <div class="ds-spec">Geist · variantes de peso e cor para hierarquia</div>
+    </div>
+    <div class="ds-type-sample">
+      <div style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-2);">--accent: #1F5D8C</div>
+      <div class="ds-spec">JetBrains Mono · tokens, valores, códigos</div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- ESPAÇAMENTO -->
+  <section class="ds-section" id="espacamento">
+    <h2 class="ds-section-title">Espaçamento</h2>
+    <p class="ds-section-sub">Escala baseada em múltiplos de 4px.</p>
+    <table class="ds-token-table">
+      <thead><tr><th>Token / Valor</th><th>Uso típico</th><th>Preview</th></tr></thead>
+      <tbody>
+        <tr><td><code>4px</code></td><td>Gap mínimo, separadores inline</td><td><div style="height:16px;background:var(--accent-soft);width:4px;border-radius:2px"></div></td></tr>
+        <tr><td><code>8px</code></td><td>Padding interno de pills, gaps de ícone</td><td><div style="height:16px;background:var(--accent-soft);width:8px;border-radius:2px"></div></td></tr>
+        <tr><td><code>12px</code></td><td>Padding de botões, gap de nav items</td><td><div style="height:16px;background:var(--accent-soft);width:12px;border-radius:2px"></div></td></tr>
+        <tr><td><code>16px</code></td><td>Gap entre rows, padding de card interno</td><td><div style="height:16px;background:var(--accent-soft);width:16px;border-radius:2px"></div></td></tr>
+        <tr><td><code>20px</code></td><td>Padding de card, gap entre secções</td><td><div style="height:16px;background:var(--accent-soft);width:20px;border-radius:2px"></div></td></tr>
+        <tr><td><code>24px</code></td><td>Gap de grid principal</td><td><div style="height:16px;background:var(--accent-soft);width:24px;border-radius:2px"></div></td></tr>
+        <tr><td><code>28–44px</code></td><td>Padding do canvas</td><td><div style="height:16px;background:var(--accent-soft);width:44px;border-radius:2px"></div></td></tr>
+        <tr><td><code>56–72px</code></td><td>Separação entre secções maiores</td><td><div style="height:16px;background:var(--accent-soft);width:72px;border-radius:2px"></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- SOMBRAS E RAIOS -->
+  <section class="ds-section" id="sombras">
+    <h2 class="ds-section-title">Sombras & raios</h2>
+    <p class="ds-section-sub">Sombras subtis, nunca decorativas. Raios consistentes por contexto.</p>
+
+    <div class="ds-label">Border radius</div>
+    <table class="ds-token-table" style="margin-bottom: 28px;">
+      <thead><tr><th>Token</th><th>Valor</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>--r-sm</code></td><td>6px</td><td>Chips, badges pequenos, inputs</td></tr>
+        <tr><td><code>--r-md</code></td><td>10px</td><td>Botões, nav items, swatches</td></tr>
+        <tr><td><code>--r-lg</code></td><td>14px</td><td>Cards, modais</td></tr>
+        <tr><td><code>--r-xl</code></td><td>18px</td><td>Next session card, elementos grandes</td></tr>
+        <tr><td><code>--r-pill</code></td><td>999px</td><td>Pills, avatares</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ds-label">Box shadows</div>
+    <div class="ds-grid-3">
+      <div style="background:var(--surface);padding:20px;border-radius:var(--r-lg);box-shadow:var(--sh-1);text-align:center;">
+        <div class="ds-spec" style="margin:0">--sh-1<br>Elevation mínima</div>
+      </div>
+      <div style="background:var(--surface);padding:20px;border-radius:var(--r-lg);box-shadow:var(--sh-2);text-align:center;">
+        <div class="ds-spec" style="margin:0">--sh-2<br>Cards padrão</div>
+      </div>
+      <div style="background:var(--surface);padding:20px;border-radius:var(--r-lg);box-shadow:var(--sh-pop);text-align:center;">
+        <div class="ds-spec" style="margin:0">--sh-pop<br>Dropdowns, modais</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- BOTÕES -->
+  <section class="ds-section" id="botoes">
+    <h2 class="ds-section-title">Botões</h2>
+    <p class="ds-section-sub">5 variantes. Usar <code>btn-primary</code> uma vez por ecrã para a ação principal.</p>
+
+    <div class="ds-label">Variantes</div>
+    <div class="ds-preview-box">
+      <div class="ds-row">
+        <button class="btn btn-primary">Submeter respostas</button>
+        <button class="btn btn-ghost">Ver todos</button>
+        <button class="btn btn-soft">Responder</button>
+        <button class="btn btn-outline">Editar</button>
+        <button class="btn btn-primary" disabled>Desativado</button>
+      </div>
+    </div>
+    <table class="ds-token-table" style="margin-bottom: 28px;">
+      <thead><tr><th>Classe</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>.btn.btn-primary</code></td><td>Ação principal da página ou secção</td></tr>
+        <tr><td><code>.btn.btn-ghost</code></td><td>Ações secundárias, navegação</td></tr>
+        <tr><td><code>.btn.btn-soft</code></td><td>Ações em contexto (dentro de rows)</td></tr>
+        <tr><td><code>.btn.btn-outline</code></td><td>Alternativa ao ghost com borda visível</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ds-label">Tamanhos</div>
+    <div class="ds-preview-box">
+      <div class="ds-row" style="align-items: center;">
+        <button class="btn btn-primary btn-lg">Grande · btn-lg</button>
+        <button class="btn btn-primary">Normal</button>
+        <button class="btn btn-primary btn-sm">Pequeno · btn-sm</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- PILLS & BADGES -->
+  <section class="ds-section" id="pills">
+    <h2 class="ds-section-title">Pills & badges</h2>
+    <p class="ds-section-sub">Usados para estado, contagens e categorias. Nunca decorativos.</p>
+
+    <div class="ds-label">Pills de estado</div>
+    <div class="ds-preview-box">
+      <div class="ds-row">
+        <span class="pill done">Concluído</span>
+        <span class="pill overdue">Em atraso</span>
+        <span class="pill due">Hoje</span>
+        <span class="pill info">Disponível</span>
+        <span class="pill outline">Pré-sessão</span>
+      </div>
+    </div>
+
+    <div class="ds-label">Avatar</div>
+    <div class="ds-preview-box">
+      <div class="ds-row" style="align-items: center;">
+        <div class="avatar" style="width:56px;height:56px;font-size:18px">BL</div>
+        <div class="avatar" style="width:44px;height:44px;font-size:14px">AS</div>
+        <div class="avatar avatar-sm">TF</div>
+      </div>
+    </div>
+
+    <div class="ds-label">Risk badges (terapeuta)</div>
+    <div class="ds-preview-box">
+      <div class="ds-row">
+        <span class="risk-badge baixo">Baixo</span>
+        <span class="risk-badge moderado">Moderado</span>
+        <span class="risk-badge elevado">Elevado</span>
+        <span class="risk-badge indefinido">Indef.</span>
+      </div>
+    </div>
+
+    <div class="ds-label">Count badge</div>
+    <div class="ds-preview-box">
+      <div class="ds-row" style="align-items: center;">
+        <span>Questionários <span class="count">3</span></span>
+        <span style="font-size:13px;color:var(--ink-3)"><code>.count</code> — aparece junto a títulos de secção</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- CARDS -->
+  <section class="ds-section" id="cards">
+    <h2 class="ds-section-title">Cards</h2>
+    <p class="ds-section-sub">Container base para a maioria do conteúdo. Variante <code>flush</code> remove o padding para listas internas.</p>
+
+    <div class="ds-label">Card padrão</div>
+    <div class="card" style="margin-bottom: 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <div>
+          <div class="page-eyebrow" style="margin-bottom:4px">Notas da terapeuta</div>
+          <div style="font-family:var(--font-serif);font-size:22px">Insights recentes</div>
+        </div>
+        <button class="card-action">Ver progresso</button>
+      </div>
+      <p style="color:var(--ink-3);margin:0;font-size:13px">Conteúdo do card aqui — texto, listas, gráficos.</p>
+    </div>
+
+    <div class="ds-label">Card com cabeçalho flush (usado em listas)</div>
+    <div class="card flush" style="margin-bottom: 16px;">
+      <div class="card-head">
+        <div class="card-title">Questionários pendentes <span class="count">3</span></div>
+        <button class="card-action">Ver todos</button>
+      </div>
+      <div class="list">
+        <div class="row" style="grid-template-columns: 1fr auto;">
+          <div><div class="row-title">Perfil de Humor Pré-Sessão</div><div class="row-sub">Pré-sessão · 12 perguntas · ~4 min</div></div>
+          <span class="pill due">Hoje</span>
+        </div>
+        <div class="row" style="grid-template-columns: 1fr auto;">
+          <div><div class="row-title">Inventário de Desafios Recentes</div><div class="row-sub">Semanal · 22 perguntas · ~8 min</div></div>
+          <span class="pill overdue">Em atraso</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-label">Stat card</div>
+    <div class="ds-grid-2">
+      <div class="stat-card accent">
+        <div class="page-eyebrow">Bem-estar geral</div>
+        <div class="stat-row">
+          <div class="stat-value">3,7<span class="stat-unit">/ 5,0</span></div>
+          <span class="pill done" style="font-size:11px">+43%</span>
+        </div>
+        <div class="stat-sub">média de 4 semanas · Core-OM</div>
+      </div>
+      <div class="stat-card">
+        <div class="page-eyebrow">Ansiedade</div>
+        <div class="stat-row">
+          <div class="stat-value">2,2<span class="stat-unit">/ 5,0</span></div>
+          <span class="pill done" style="font-size:11px">−42%</span>
+        </div>
+        <div class="stat-sub">Inventário de Estado Emocional</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- FORMULÁRIOS -->
+  <section class="ds-section" id="formularios">
+    <h2 class="ds-section-title">Formulários</h2>
+    <p class="ds-section-sub">Inputs limpos, sem decoração excessiva. Likert scale exclusiva dos questionários.</p>
+
+    <div class="ds-label">Input de pesquisa</div>
+    <div class="ds-preview-box">
+      <div class="search-input">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Procurar por nome ou foco terapêutico…" />
+      </div>
+    </div>
+
+    <div class="ds-label">Filter chips</div>
+    <div class="ds-preview-box">
+      <div class="filter-chips" style="padding:0">
+        <button class="chip on">Todos</button>
+        <button class="chip">Pré-sessão</button>
+        <button class="chip">Pós-sessão</button>
+        <button class="chip">Semanal</button>
+      </div>
+    </div>
+
+    <div class="ds-label">Segmented control</div>
+    <div class="ds-preview-box">
+      <div class="seg">
+        <button class="seg-btn on">Bem-estar</button>
+        <button class="seg-btn">Ansiedade</button>
+      </div>
+    </div>
+
+    <div class="ds-label">Tabs</div>
+    <div class="ds-preview-box">
+      <div class="tabs">
+        <button class="tab active">A responder <span class="tab-count">5</span></button>
+        <button class="tab">Histórico <span class="tab-count">7</span></button>
+      </div>
+    </div>
+
+    <div class="ds-label">Toggle switch</div>
+    <div class="ds-preview-box">
+      <div class="ds-col" style="gap:0">
+        <div class="toggle-row">
+          <div><div style="font-size:14px;color:var(--ink);font-weight:500">Lembretes de questionários</div><div style="font-size:12.5px;color:var(--ink-3)">24h antes de cada sessão</div></div>
+          <button class="switch on"><span class="switch-knob"></span></button>
+        </div>
+        <div class="toggle-row">
+          <div><div style="font-size:14px;color:var(--ink);font-weight:500">Relatórios mensais</div><div style="font-size:12.5px;color:var(--ink-3)">Resumo das tuas medidas</div></div>
+          <button class="switch"><span class="switch-knob"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-label">Likert scale (questionários)</div>
+    <div class="ds-preview-box">
+      <div class="qitem answered">
+        <div class="qitem-num">01</div>
+        <div class="qitem-body">
+          <p class="qitem-text">Tenho-me sentido tensa, ansiosa ou nervosa.</p>
+          <div class="likert">
+            <button class="likert-btn"><span class="likert-dot"></span><span class="likert-label">Nunca</span></button>
+            <button class="likert-btn"><span class="likert-dot"></span><span class="likert-label">Raramente</span></button>
+            <button class="likert-btn on"><span class="likert-dot"></span><span class="likert-label">Às vezes</span></button>
+            <button class="likert-btn"><span class="likert-dot"></span><span class="likert-label">Muitas vezes</span></button>
+            <button class="likert-btn"><span class="likert-dot"></span><span class="likert-label">Sempre</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-label">Progress bar</div>
+    <div class="ds-preview-box">
+      <div style="margin-bottom:10px"><div class="bar"><div class="bar-fill" style="width:65%"></div></div></div>
+      <div style="margin-bottom:10px"><div class="bar"><div class="bar-fill" style="width:40%"></div></div></div>
+      <div><div class="bar"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- NAVEGAÇÃO -->
+  <section class="ds-section" id="navegacao">
+    <h2 class="ds-section-title">Navegação</h2>
+    <p class="ds-section-sub">Sidebar com 240px expandida / 72px colapsada. Topbar fixa no topo.</p>
+
+    <div class="ds-label">Nav items</div>
+    <div class="ds-preview-box">
+      <div style="display:flex;flex-direction:column;gap:2px;width:220px;">
+        <button class="nav-item active">
+          <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg>
+          <span class="nav-label">Painel</span>
+        </button>
+        <button class="nav-item">
+          <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4v-.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V4"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>
+          <span class="nav-label">Questionários</span>
+          <span class="nav-badge">3</span>
+        </button>
+        <button class="nav-item">
+          <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+          <span class="nav-label">Sessões</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="ds-label">Page head</div>
+    <div class="ds-preview-box">
+      <div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div class="page-eyebrow">Avaliações terapêuticas</div>
+          <h1 class="page-title">Os meus <em>questionários</em></h1>
+          <p class="page-sub">Estes instrumentos ajudam a tua terapeuta a acompanhar o teu progresso.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary">Responder</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- TABELAS E LISTAS -->
+  <section class="ds-section" id="tabelas">
+    <h2 class="ds-section-title">Tabelas & listas</h2>
+    <p class="ds-section-sub">Padrão de lista com <code>.list</code> + <code>.row</code>. Colunas definidas por <code>grid-template-columns</code> inline.</p>
+
+    <div class="ds-label">Lista padrão</div>
+    <div class="card flush" style="margin-bottom: 20px;">
+      <div class="table-head" style="grid-template-columns: 2fr 1fr 1fr 0.5fr">
+        <span>Questionário</span><span>Tipo</span><span>Data</span><span></span>
+      </div>
+      <div class="list">
+        <div class="row" style="grid-template-columns: 2fr 1fr 1fr 0.5fr">
+          <div><div class="row-title">Core-OM em Português</div><div class="row-sub">Concluído · respostas guardadas</div></div>
+          <span class="pill outline">Mensal</span>
+          <span style="font-size:13px;color:var(--ink-2)">4 Mai 2026</span>
+          <button class="btn btn-ghost" style="padding:6px 10px">→</button>
+        </div>
+        <div class="row" style="grid-template-columns: 2fr 1fr 1fr 0.5fr">
+          <div><div class="row-title">Perfil de Humor Pré-Sessão</div><div class="row-sub">Concluído · respostas guardadas</div></div>
+          <span class="pill outline">Pré-sessão</span>
+          <span style="font-size:13px;color:var(--ink-2)">23 Abr 2026</span>
+          <button class="btn btn-ghost" style="padding:6px 10px">→</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-label">Meta list (dl)</div>
+    <div class="card" style="max-width: 380px;">
+      <dl class="meta-list">
+        <div><dt>Clínica</dt><dd>Centro Psicológico Raízes</dd></div>
+        <div><dt>Experiência</dt><dd>12 anos</dd></div>
+        <div><dt>Abordagem</dt><dd>Cognitivo-comportamental</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- ÍCONES -->
+  <section class="ds-section" id="icones">
+    <h2 class="ds-section-title">Ícones</h2>
+    <p class="ds-section-sub">SVG inline. Tamanho padrão 18px, strokeWidth 1.6. Importar de <code>src/components/Icons.jsx</code>.</p>
+
+    <div class="icon-grid">
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg>Home</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4v-.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V4"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>Clipboard</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>Calendar</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16V10"/><path d="M12 16V6"/><path d="M17 16v-4"/></svg>Chart</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-3.5 4-5 7-5s6 1.5 7 5"/></svg>User</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3"/></svg>Search</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17l9-10"/></svg>Check</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.5 20h19L12 4z"/><path d="M12 10v5"/><circle cx="12" cy="17.5" r=".5"/></svg>Alert</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>Clock</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>Arrow→</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>Chevron→</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Plus</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="13" height="11" rx="2"/><path d="m16 11 5-3v8l-5-3"/></svg>Video</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 4v-4H6a2 2 0 0 1-2-2V6z"/></svg>Message</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 1 1 12 0v6"/><path d="M4.5 17h15"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Bell</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10.5c0 5.6-7 10-7 10z"/></svg>Heart</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4 3 7.5 7 9 4-1.5 7-5 7-9V6l-7-3z"/></svg>Shield</div>
+      <div class="icon-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>Download</div>
+    </div>
+  </section>
+
+  <hr class="ds-divider">
+
+  <!-- PALETAS -->
+  <section class="ds-section" id="paletas">
+    <h2 class="ds-section-title">Paletas</h2>
+    <p class="ds-section-sub">5 paletas disponíveis para a área do paciente. Aplicadas via <code>applyPalette()</code> em <code>PatientApp.jsx</code>.</p>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <div class="palette-name">Sereno <span style="color:var(--ink-4);font-size:12px;font-weight:400">(padrão)</span></div>
+        <div class="palette-strip">
+          <div style="flex:1;background:#1F5D8C"></div>
+          <div style="flex:1;background:#163F60"></div>
+          <div style="flex:1;background:#E5EFF7"></div>
+          <div style="flex:1;background:#F2F7FB"></div>
+          <div style="flex:1;background:#0F2E48"></div>
+        </div>
+        <div class="ds-spec">#1F5D8C · #163F60 · #E5EFF7 · #F2F7FB · #0F2E48</div>
+      </div>
+      <div>
+        <div class="palette-name">Salva</div>
+        <div class="palette-strip">
+          <div style="flex:1;background:#4F7A65"></div>
+          <div style="flex:1;background:#2F5347"></div>
+          <div style="flex:1;background:#E4EEEA"></div>
+          <div style="flex:1;background:#F1F6F3"></div>
+          <div style="flex:1;background:#1F3528"></div>
+        </div>
+        <div class="ds-spec">#4F7A65 · #2F5347 · #E4EEEA · #F1F6F3 · #1F3528</div>
+      </div>
+      <div>
+        <div class="palette-name">Argila</div>
+        <div class="palette-strip">
+          <div style="flex:1;background:#A85B47"></div>
+          <div style="flex:1;background:#7A3F2F"></div>
+          <div style="flex:1;background:#F4E4DD"></div>
+          <div style="flex:1;background:#FAF1ED"></div>
+          <div style="flex:1;background:#48201A"></div>
+        </div>
+        <div class="ds-spec">#A85B47 · #7A3F2F · #F4E4DD · #FAF1ED · #48201A</div>
+      </div>
+      <div>
+        <div class="palette-name">Bosque</div>
+        <div class="palette-strip">
+          <div style="flex:1;background:#1F6B6E"></div>
+          <div style="flex:1;background:#0F4549"></div>
+          <div style="flex:1;background:#E0EEEE"></div>
+          <div style="flex:1;background:#F0F7F7"></div>
+          <div style="flex:1;background:#0A2F32"></div>
+        </div>
+        <div class="ds-spec">#1F6B6E · #0F4549 · #E0EEEE · #F0F7F7 · #0A2F32</div>
+      </div>
+      <div>
+        <div class="palette-name">Lavanda</div>
+        <div class="palette-strip">
+          <div style="flex:1;background:#6B4F7A"></div>
+          <div style="flex:1;background:#42304F"></div>
+          <div style="flex:1;background:#EAE2EF"></div>
+          <div style="flex:1;background:#F5F1F8"></div>
+          <div style="flex:1;background:#28162F"></div>
+        </div>
+        <div class="ds-spec">#6B4F7A · #42304F · #EAE2EF · #F5F1F8 · #28162F</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const links = document.querySelectorAll('.ds-nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.ds-nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
